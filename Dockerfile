@@ -16,9 +16,11 @@ WORKDIR /app
 
 # Copy dependency files and README for package build
 COPY pyproject.toml uv.lock README.md ./
+COPY src/ /app/src/
 
-# Install dependencies
-RUN uv sync --frozen --no-cache
+# Install dependencies and the package itself
+RUN uv sync --frozen --no-cache && \
+    uv pip install -e .
 
 # Production stage
 FROM python:3.10-slim AS production
