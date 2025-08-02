@@ -140,6 +140,55 @@ This document outlines the complete roadmap for delivering the QR Code Reader MC
 - [ ] Test performance and resource usage
 - [ ] Validate container security practices
 
+## Phase 7: CI/CD & Automation
+
+### 7.1 GitHub Actions Setup
+- [ ] Create `.github/workflows/ci.yml` for continuous integration
+- [ ] Set up automated linting workflow (black, ruff, mypy)
+- [ ] Configure automated testing workflow (pytest with coverage)
+- [ ] Create `.github/workflows/security.yml` for security scanning
+- [ ] Add semgrep security scanning with custom configuration
+- [ ] Set up workflow triggers (push, PR, schedule)
+- [ ] Configure workflow permissions and security best practices
+
+### 7.2 Docker Build Automation
+- [ ] Create `.github/workflows/docker.yml` for container builds
+- [ ] Set up automated Docker image building on push to main
+- [ ] Configure multi-platform builds (linux/amd64, linux/arm64)
+- [ ] Add Docker image tagging strategy (latest, version, commit SHA)
+- [ ] Set up Docker Hub or GitHub Container Registry publishing
+
+### 7.3 Release Automation
+- [ ] Create `.github/workflows/release.yml` for releases
+- [ ] Set up automated Python package publishing to PyPI
+- [ ] Configure semantic versioning and changelog generation
+- [ ] Add release notes automation
+- [ ] Set up dependency vulnerability scanning
+
+### 7.4 Security Configuration
+- [ ] Create `.semgrep.yml` configuration file for custom security rules
+- [ ] Configure semgrep rules for Python security best practices
+- [ ] Add Docker security scanning rules
+- [ ] Set up semgrep ignore patterns for false positives
+- [ ] Configure security vulnerability reporting
+
+### 7.5 Dependency Management
+- [ ] Create `.github/dependabot.yml` configuration
+- [ ] Configure Dependabot for Python dependencies (pip/uv)
+- [ ] Set up Dependabot for Docker base image updates
+- [ ] Configure Dependabot for GitHub Actions workflow updates
+- [ ] Set up automated security updates and vulnerability alerts
+- [ ] Configure dependency review for pull requests
+
+### 7.6 Quality Gates
+- [ ] Configure branch protection rules requiring CI checks
+- [ ] Set up status checks for PR merging (tests, lint, security)
+- [ ] Add code coverage requirements and reporting
+- [ ] Require semgrep security scan to pass
+- [ ] Set up PR template and issue templates
+- [ ] Create `.github/CODEOWNERS` file with @justanotherspy as codeowner
+- [ ] Configure CODEOWNERS for all files requiring review approval
+
 ## Development Dependencies
 
 Based on the requirements, the following dependencies are configured:
@@ -159,8 +208,10 @@ Based on the requirements, the following dependencies are configured:
 ### Development Tools Available
 - `uv`: Package management and virtual environments
 - `gh`: GitHub CLI for PR workflow
-- `semgrep`: Static analysis security tool
+- `semgrep`: Static analysis security tool with custom configuration
 - `docker`: Containerization platform
+- `GitHub Actions`: CI/CD automation and workflows
+- `Dependabot`: Automated dependency updates and security alerts
 
 ## Success Criteria
 
@@ -175,7 +226,13 @@ The project will be considered complete when:
 - [ ] Documentation is complete and accurate
 - [ ] Docker container runs MCP server successfully
 - [ ] Container passes security scans
-- [ ] Git workflow with branches and PRs is documented
+- [x] Git workflow with branches and PRs is documented
+- [ ] GitHub Actions CI/CD workflows are functional
+- [ ] Automated testing and linting pass on all PRs
+- [ ] Docker images build and publish automatically
+- [ ] Semgrep security scanning configured and passing
+- [ ] Dependabot automated dependency updates working
+- [ ] Security vulnerabilities are automatically detected and reported
 
 ## Development Workflow
 
@@ -192,6 +249,13 @@ The project will be considered complete when:
 3. Test in container: `make docker-test`
 4. Development mode: `make docker-dev`
 
+### CI/CD Workflow
+1. Push to feature branch triggers: linting, testing, semgrep security scan
+2. Create PR triggers: full CI pipeline + Docker build test + dependency review
+3. Dependabot PRs: automated dependency updates with security checks
+4. Merge to main triggers: Docker image build and publish + security scan
+5. Tag release triggers: PyPI package publish + GitHub release + vulnerability report
+
 ## Current Status: Phase 1 Complete ✅
 
 **Completed:**
@@ -203,4 +267,6 @@ The project will be considered complete when:
 - ✅ Basic tests and placeholder server
 - ✅ All linting, formatting, and testing passes
 
-**Next Phase:** Phase 2 - Core MCP Server Implementation + Docker Setup
+**Next Phase:** Phase 2 - Core MCP Server Implementation + Docker Setup + CI/CD
+
+**GitHub Actions Ready:** With GitHub App installed, Phase 7 CI/CD automation can be implemented alongside core development for continuous integration from the start.
