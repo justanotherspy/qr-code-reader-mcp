@@ -1,0 +1,121 @@
+rules:
+  - id: python-security-hardcoded-secrets
+    patterns:
+      - pattern-either:
+          - pattern: password = "..."
+          - pattern: api_key = "..."
+          - pattern: secret = "..."
+          - pattern: token = "..."
+          - pattern: |
+              os.environ["..."] = "..."
+    message: Potential hardcoded secret detected
+    languages: [python]
+    severity: ERROR
+
+  - id: python-security-sql-injection
+    patterns:
+      - pattern-either:
+          - pattern: |
+              cursor.execute("..." + $VAR + "...")
+          - pattern: |
+              cursor.execute(f"...{$VAR}...")
+    message: Potential SQL injection vulnerability
+    languages: [python]
+    severity: ERROR
+
+  - id: python-security-path-traversal
+    patterns:
+      - pattern-either:
+          - pattern: |
+              open($VAR, ...)
+          - pattern: |
+              with open($VAR, ...) as $FILE: ...
+    message: Potential path traversal vulnerability - validate file paths
+    languages: [python]
+    severity: WARNING
+    metadata:
+      category: security
+      cwe: "CWE-22: Improper Limitation of a Pathname to a Restricted Directory"
+
+  - id: docker-security-user-root
+    patterns:
+      - pattern: USER root
+    paths:
+      include:
+        - "Dockerfile*"
+    message: Avoid running containers as root user for security
+    languages: [generic]
+    severity: WARNING
+
+  - id: python-mcp-input-validation
+    patterns:
+      - pattern-either:
+          - pattern: |
+              def $FUNC($ARGS):
+                  ...
+                  return $RET
+          - pattern: |
+              async def $FUNC($ARGS):
+                  ...
+                  return $RET
+    paths:
+      include:
+        - "src/**/*.py"
+    message: Ensure proper input validation for MCP tool functions
+    languages: [python]
+    severity: INFO
+    metadata:
+      category: security
+      technology: [mcp]
+
+  - id: python-opencv-security
+    patterns:
+      - pattern-either:
+          - pattern: cv2.imread($PATH)
+          - pattern: cv2.imdecode($DATA, ...)
+    message: Validate image file paths and data before processing with OpenCV
+    languages: [python]
+    severity: INFO
+    metadata:
+      category: security
+      technology: [opencv]
+
+  - id: python-logging-sensitive-data
+    patterns:
+      - pattern-either:
+          - pattern: |
+              logger.$METHOD(..., password=..., ...)
+          - pattern: |
+              logger.$METHOD(..., token=..., ...)
+          - pattern: |
+              print(..., password=..., ...)
+    message: Avoid logging sensitive data
+    languages: [python]
+    severity: ERROR
+
+  - id: python-exception-info-disclosure
+    patterns:
+      - pattern-either:
+          - pattern: |
+              except $EXC:
+                  return str($EXC)
+          - pattern: |
+              except $EXC as $VAR:
+                  return str($VAR)
+    message: Avoid exposing detailed exception information to users
+    languages: [python]
+    severity: WARNING
+
+# Global settings
+include:
+  - "src/"
+  - "tests/"
+  - "Dockerfile*"
+  - "docker-compose*.yml"
+
+exclude:
+  - "**/__pycache__/"
+  - "**/.pytest_cache/"
+  - "**/htmlcov/"
+  - "**/.coverage"
+  - "**/node_modules/"

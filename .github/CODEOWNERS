@@ -1,0 +1,23 @@
+# Global ownership - all files require review from @justanotherspy
+* @justanotherspy
+
+# Critical configuration files require extra scrutiny
+/.github/ @justanotherspy
+/pyproject.toml @justanotherspy
+/Dockerfile @justanotherspy
+/docker-compose*.yml @justanotherspy
+/.semgrep.yml @justanotherspy
+/Makefile @justanotherspy
+
+# Documentation requires review for accuracy
+/*.md @justanotherspy
+/TASKS.md @justanotherspy
+/CLAUDE.md @justanotherspy
+
+# Security and CI/CD configurations
+/.github/workflows/ @justanotherspy
+/.github/dependabot.yml @justanotherspy
+
+# Core source code requires thorough review
+/src/ @justanotherspy
+/tests/ @justanotherspy
