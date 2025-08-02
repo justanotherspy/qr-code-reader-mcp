@@ -3,6 +3,7 @@
 import base64
 import logging
 from pathlib import Path
+from typing import Any
 
 import cv2
 import numpy as np
@@ -76,7 +77,7 @@ async def read_qr_code(
         raise InvalidImageError(f"Failed to process image: {str(e)}") from e
 
 
-def _load_image_from_path(image_path: str) -> np.ndarray:
+def _load_image_from_path(image_path: str) -> np.ndarray[Any, Any]:
     """
     Load image from file path.
 
@@ -110,7 +111,7 @@ def _load_image_from_path(image_path: str) -> np.ndarray:
     return image
 
 
-def _load_image_from_base64(image_data: str) -> np.ndarray:
+def _load_image_from_base64(image_data: str) -> np.ndarray[Any, Any]:
     """
     Load image from base64 encoded data.
 
@@ -145,7 +146,7 @@ def _load_image_from_base64(image_data: str) -> np.ndarray:
         raise InvalidImageError(f"Failed to process base64 image data: {str(e)}") from e
 
 
-def _decode_qr_code(image: np.ndarray) -> str | None:
+def _decode_qr_code(image: np.ndarray[Any, Any]) -> str | None:
     """
     Decode QR code from OpenCV image.
 
@@ -159,7 +160,7 @@ def _decode_qr_code(image: np.ndarray) -> str | None:
     detector = cv2.QRCodeDetector()
 
     # Try to decode QR code
-    retval, decoded_info, points, _ = detector.detectAndDecodeMulti(image)
+    retval, decoded_info, _, _ = detector.detectAndDecodeMulti(image)
 
     if retval and decoded_info:
         # Return the first valid decoded result
@@ -168,7 +169,7 @@ def _decode_qr_code(image: np.ndarray) -> str | None:
                 return info
 
     # If multi-decode fails, try single decode
-    retval, decoded_info, points = detector.detectAndDecode(image)  # type: ignore
+    retval, decoded_info, _ = detector.detectAndDecode(image)  # type: ignore
 
     if retval and decoded_info:
         return str(decoded_info)

@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 server = Server("qr-code-reader")
 
 
-@server.list_tools()
+@server.list_tools()  # type: ignore[misc,no-untyped-call]
 async def handle_list_tools() -> list[types.Tool]:
     """List available MCP tools."""
     return [
@@ -47,7 +47,7 @@ async def handle_list_tools() -> list[types.Tool]:
     ]
 
 
-@server.call_tool()
+@server.call_tool()  # type: ignore[misc]
 async def handle_call_tool(
     name: str, arguments: dict[str, Any]
 ) -> list[types.TextContent]:
