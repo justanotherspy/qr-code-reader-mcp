@@ -1,5 +1,5 @@
 # Multi-stage build for optimized production image
-FROM python:3.10-slim AS builder
+FROM python:3.13-slim AS builder
 
 # Install system dependencies for building
 RUN apt-get update && apt-get install -y \
@@ -23,7 +23,7 @@ RUN uv sync --frozen --no-cache && \
     uv pip install -e .
 
 # Production stage
-FROM python:3.10-slim AS production
+FROM python:3.13-slim AS production
 
 # Install runtime dependencies (minimal opencv dependencies)
 RUN apt-get update && apt-get install -y \
