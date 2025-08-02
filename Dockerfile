@@ -1,5 +1,5 @@
 # Multi-stage build for optimized production image
-FROM python:3.10-slim as builder
+FROM python:3.10-slim AS builder
 
 # Install system dependencies for building
 RUN apt-get update && apt-get install -y \
@@ -14,18 +14,22 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 # Set working directory
 WORKDIR /app
 
-# Copy dependency files
-COPY pyproject.toml uv.lock ./
+# Copy dependency files and README for package build
+COPY pyproject.toml uv.lock README.md ./
 
 # Install dependencies
 RUN uv sync --frozen --no-cache
 
 # Production stage
-FROM python:3.10-slim as production
+FROM python:3.10-slim AS production
 
-# Install runtime dependencies
+# Install runtime dependencies (minimal opencv dependencies)
 RUN apt-get update && apt-get install -y \
-    python3-opencv \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgomp1 \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
